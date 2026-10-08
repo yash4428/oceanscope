@@ -1,0 +1,15 @@
+# Rendered films are 0.2–1 GB each, over GitHub's 100 MB file limit. Share them through a drive instead.
+*.mp4
+*.mov
+*.wav
+*.aiff
+OceanScope_Demo_poster.jpg
+
+# Video toolkit scratch and dependencies
+video/node_modules/
+video/work/
+
+# Local working files
+film_doc/
+.claude/
+.DS_Store

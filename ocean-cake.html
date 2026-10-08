@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ocean cake cutter: PS 26067 demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;1,500&family=Barlow+Semi+Condensed:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E6EBE8; --panel:#F3F5F2; --ink:#1C2A35; --ink-2:#556570; --rule:#C6CFCC;
+  --land:#D8CBA8; --float:#E0A21B; --focus:#1F6FA8; --danger:#A33A2A;
+  --cond:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);
+  font-family:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.45}
+#app{display:grid;grid-template-columns:320px 1fr;height:100vh;height:100dvh}
+#panel{background:var(--panel);border-right:1px solid var(--rule);overflow-y:auto;padding:24px 22px 28px}
+h1{font-family:var(--cond);font-weight:600;font-size:28px;line-height:1.05;letter-spacing:-.01em;margin:0 0 8px}
+.lede{color:var(--ink-2);margin:0 0 18px;font-size:14px;max-width:34ch}
+.group{padding:16px 0 6px;border-top:1px solid var(--rule)}
+.group h2{font-size:15px;font-weight:600;margin:0 0 10px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--ink);border-radius:6px;overflow:hidden}
+.seg button{font:500 14px "Barlow",system-ui,sans-serif;padding:7px 4px;border:0;background:transparent;color:var(--ink);cursor:pointer}
+.seg button+button{border-left:1px solid var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
+.row{margin:4px 0 14px}
+.row-top{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;margin-bottom:2px}
+.row-top output{font-family:var(--cond);font-weight:600;font-size:16px;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--ink);margin:4px 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 12px}
+.chip{border:1px solid var(--rule);background:#FBFCFA;border-radius:999px;padding:5px 11px;
+  font:500 13px "Barlow",system-ui,sans-serif;color:var(--ink);cursor:pointer}
+.chip:hover{border-color:var(--ink)}
+.btn{width:100%;border:1px solid var(--ink);background:var(--ink);color:var(--panel);border-radius:6px;
+  padding:8px 10px;font:600 14px "Barlow",system-ui,sans-serif;cursor:pointer;margin:0 0 12px}
+.btn.ghost{background:transparent;color:var(--ink)}
+.check{display:flex;align-items:center;gap:9px;font-size:14px;margin:0 0 9px;cursor:pointer}
+.check input{accent-color:var(--ink);width:16px;height:16px;margin:0}
+#cbar{width:100%;height:16px;display:block;border-radius:3px}
+.cticks{display:flex;justify-content:space-between;font-family:var(--cond);font-size:13px;color:var(--ink-2);margin:3px 0 10px;font-variant-numeric:tabular-nums}
+.range-row{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end}
+.range-row label{font-size:13px;color:var(--ink-2)}
+.range-row input{width:100%;font:500 14px "Barlow",system-ui,sans-serif;padding:5px 7px;border:1px solid var(--rule);border-radius:6px;background:#FBFCFA;color:var(--ink)}
+.range-row button{font:500 13px "Barlow",system-ui,sans-serif;padding:6px 9px;border:1px solid var(--rule);border-radius:6px;background:#FBFCFA;color:var(--ink);cursor:pointer}
+#rangeErr{color:var(--danger);font-size:13px;min-height:18px;margin:4px 0 0}
+.note{font-size:13px;color:var(--ink-2);margin:4px 0 12px}
+.swatches{display:flex;gap:16px;font-size:13px;color:var(--ink-2);margin-bottom:10px}
+.swatches span{display:inline-flex;align-items:center;gap:6px}
+.swatches i{width:14px;height:10px;display:inline-block;border:1px solid rgba(28,42,53,.35)}
+#stage{position:relative;overflow:hidden;min-height:0}
+#c{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+#labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.lab{position:absolute;left:0;top:0;font:500 13px var(--cond);color:var(--ink-2);white-space:nowrap;will-change:transform}
+.geo{font:italic 500 15px "Barlow",system-ui,sans-serif;color:var(--ink);letter-spacing:.03em}
+#tip{position:absolute;left:0;top:0;pointer-events:none;background:var(--ink);color:#F3F5F2;padding:7px 10px 8px;border-radius:6px;font-size:13px;line-height:1.3;display:none;max-width:240px}
+#tip b{display:block;font:600 18px var(--cond);font-variant-numeric:tabular-nums}
+#profile{position:absolute;top:16px;right:16px;width:330px;background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:14px 16px 12px}
+#profile[hidden]{display:none}
+.p-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+#profile h3{margin:0;font:600 19px var(--cond)}
+#p-sub{margin:0 0 6px;color:var(--ink-2);font-size:13px}
+#p-close{border:0;background:transparent;font-size:22px;line-height:1;color:var(--ink);cursor:pointer;padding:0 4px}
+#p-chart{width:100%;height:260px;display:block}
+.p-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--ink-2);margin:4px 0 6px}
+.p-legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--float);border:1px solid var(--ink)}
+.ln{width:18px;height:2px;background:var(--ink)}
+#p-stat{margin:0;font-size:14px}
+#hint{position:absolute;left:16px;bottom:12px;color:var(--ink-2);font-size:13px;pointer-events:none;max-width:60%}
+#loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:500 16px "Barlow",system-ui,sans-serif;color:var(--ink-2);background:var(--paper)}
+#loading.fatal{color:var(--danger);padding:24px;text-align:center}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+@media (max-width:760px){
+  #app{grid-template-columns:1fr;grid-template-rows:56dvh 44dvh}
+  #stage{order:1}
+  #panel{order:2;border-right:0;border-top:1px solid var(--rule);padding:16px}
+  #profile{left:10px;right:10px;top:10px;width:auto}
+  #p-chart{height:180px}
+  #hint{display:none}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="panel" aria-label="Controls">
+    <h1>Ocean cake cutter</h1>
+    <p class="lede">Slice the North Indian Ocean open and look inside. The water is July-like stand-in data made in your browser, shaped like INCOIS model files.</p>
+
+    <div class="group">
+      <h2>What to show</h2>
+      <div class="seg" role="group" aria-label="Ocean variable">
+        <button type="button" data-var="T" aria-pressed="true">Temperature</button>
+        <button type="button" data-var="S" aria-pressed="false">Salinity</button>
+        <button type="button" data-var="V" aria-pressed="false">Currents</button>
+      </div>
+      <p class="note" id="varNote"></p>
+    </div>
+
+    <div class="group">
+      <h2>Knife</h2>
+      <div class="row">
+        <div class="row-top"><label for="kLon">Remove east of</label><output id="oLon" for="kLon"></output></div>
+        <input id="kLon" type="range" min="40" max="100" step="0.5">
+      </div>
+      <div class="row">
+        <div class="row-top"><label for="kLat">Remove south of</label><output id="oLat" for="kLat"></output></div>
+        <input id="kLat" type="range" min="-15" max="27" step="0.5">
+      </div>
+      <div class="row">
+        <div class="row-top"><label for="kDep">Cut down to</label><output id="oDep" for="kDep"></output></div>
+        <input id="kDep" type="range" min="0" max="1000" step="1">
+      </div>
+      <div class="chips" aria-label="Knife presets">
+        <button type="button" class="chip" data-preset="corner">Corner cut</button>
+        <button type="button" class="chip" data-preset="lat15">Along 15°N</button>
+        <button type="button" class="chip" data-preset="lon88">Along 88°E</button>
+        <button type="button" class="chip" data-preset="peel">Peel to 100 m</button>
+        <button type="button" class="chip" data-preset="whole">Whole ocean</button>
+      </div>
+      <button type="button" class="btn" id="dive">Dive from surface to 2,000 m</button>
+    </div>
+
+    <div class="group">
+      <h2>View</h2>
+      <div class="row">
+        <div class="row-top"><label for="exag">Cake height</label><output id="oExag" for="exag"></output></div>
+        <input id="exag" type="range" min="0.6" max="3" step="0.05" value="1.6">
+      </div>
+      <label class="check"><input type="checkbox" id="stretch" checked> Give the upper ocean more room</label>
+      <label class="check"><input type="checkbox" id="showFloats" checked> Argo floats</label>
+      <label class="check"><input type="checkbox" id="showFlow" checked> Moving surface currents</label>
+      <label class="check"><input type="checkbox" id="showContours" checked> Contour lines</label>
+      <button type="button" class="btn ghost" id="resetCam">Reset camera</button>
+    </div>
+
+    <div class="group">
+      <h2 id="cbTitle">Colour scale</h2>
+      <canvas id="cbar" aria-hidden="true"></canvas>
+      <div class="cticks"><span id="t0"></span><span id="t1"></span><span id="t2"></span></div>
+      <div class="range-row">
+        <div><label for="rMin">Lowest</label><input id="rMin" type="number" step="any"></div>
+        <div><label for="rMax">Highest</label><input id="rMax" type="number" step="any"></div>
+        <button type="button" id="rReset">Reset</button>
+      </div>
+      <p id="rangeErr" role="alert"></p>
+      <div class="swatches"><span><i style="background:#D8CBA8"></i>Land</span><span><i style="background:#74716A"></i>Seafloor</span></div>
+    </div>
+  </aside>
+
+  <main id="stage">
+    <canvas id="c" role="img" aria-label="3D block of the North Indian Ocean that can be cut open"></canvas>
+    <div id="labels"></div>
+    <div id="tip"></div>
+    <section id="profile" hidden aria-live="polite">
+      <div class="p-head">
+        <div><h3 id="p-title"></h3><p id="p-sub"></p></div>
+        <button type="button" id="p-close" aria-label="Close float panel">×</button>
+      </div>
+      <canvas id="p-chart"></canvas>
+      <div class="p-legend"><span><i class="dot"></i>What the float measured</span><span><i class="ln"></i>What the model predicted</span></div>
+      <p id="p-stat"></p>
+    </section>
+    <div id="hint">Drag to turn. Scroll or pinch to zoom. Shift-drag to move. Click a yellow Argo float.</div>
+    <div id="loading">Building the ocean…</div>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+'use strict';
+
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+const smoothstep = (e0, e1, x) => { const t = clamp((x - e0) / (e1 - e0), 0, 1); return t * t * (3 - 2 * t); };
+const loading = $('loading');
+function showFatal(msg) { loading.textContent = msg; loading.classList.add('fatal'); loading.style.display = 'flex'; }
+if (!window.THREE) { showFatal('Three.js did not load. Check your internet connection and reload the page.'); return; }
+
+/* ---------------- Domain and mapping ---------------- */
+const LON0 = 40, LON1 = 100, LAT0 = -15, LAT1 = 27, DMAX = 4000;
+const NX = 121, NY = 85, NZ = 48, N2 = NX * NY;
+const LX = 241, LY = 169;
+const W = 6.0, DZ = 4.2, HX = W / 2, HZ = DZ / 2;
+const view = { H: 1.6, gamma: 0.5 };
+const lonToX = (lon) => (lon - LON0) / (LON1 - LON0) * W - HX;
+const latToZ = (lat) => (LAT1 - lat) / (LAT1 - LAT0) * DZ - HZ;
+const xToLon = (x) => LON0 + (x + HX) / W * (LON1 - LON0);
+const zToLat = (z) => LAT1 - (z + HZ) / DZ * (LAT1 - LAT0);
+const depthToY = (d) => -view.H * Math.pow(clamp(d, 0, DMAX) / DMAX, view.gamma);
+
+/* ---------------- Noise ---------------- */
+function hash2(i, j) {
+  let h = Math.imul(i, 374761393) ^ Math.imul(j, 668265263) ^ 0x5bd1e995;
+  h = Math.imul(h ^ (h >>> 13), 1274126177); h ^= h >>> 16;
+  return (h >>> 0) / 4294967296;
+}
+function vnoise(x, y) {
+  const i = Math.floor(x), j = Math.floor(y), fx = x - i, fy = y - j;
+  const u = fx * fx * (3 - 2 * fx), v = fy * fy * (3 - 2 * fy);
+  const a = hash2(i, j), b = hash2(i + 1, j), c = hash2(i, j + 1), d = hash2(i + 1, j + 1);
+  const ab = a + (b - a) * u, cd = c + (d - c) * u;
+  return ab + (cd - ab) * v;
+}
+function fbm(x, y, oct) {
+  let s = 0, a = 0.5, f = 1, n = 0;
+  for (let o = 0; o < oct; o++) { s += a * (vnoise(x * f + o * 17.3, y * f - o * 9.1) * 2 - 1); n += a; a *= 0.5; f *= 2.03; }
+  return s / n;
+}
+function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+/* ---------------- Coastlines (hand-traced, approximate) ---------------- */
+const POLYS = [
+  [[40,-15],[40.6,-15],[40.5,-13],[40.2,-10.3],[40,-9.6],[40,-3.4],[40.1,-3.2],[40.9,-2.3],[42.5,-0.4],[45.3,2.0],[48.5,5.3],[49.8,8.0],[51.4,10.4],[51.3,11.8],[49.2,11.3],[47.5,11.1],[45.0,10.4],[43.4,11.2],[43.1,11.6],[43.4,12.6],[45.0,12.8],[48.0,14.0],[49.1,14.5],[52.2,15.6],[54.1,17.0],[55.5,17.8],[57.2,18.9],[57.8,19.8],[58.8,20.6],[59.8,22.5],[58.6,23.6],[57.3,23.9],[56.4,24.8],[56.3,26.4],[56.45,26.95],[57.0,26.95],[57.3,26.0],[57.8,25.6],[59.0,25.4],[60.6,25.3],[62.3,25.1],[64.6,25.2],[66.5,25.4],[67.0,24.8],[67.5,24.0],[68.2,23.6],[68.7,23.2],[69.1,22.5],[69.6,21.6],[70.4,20.9],[71.0,20.7],[72.2,21.5],[72.7,21.1],[72.8,20.4],[72.85,19.0],[73.3,17.0],[73.8,15.4],[74.1,14.8],[74.8,12.9],[75.8,11.25],[76.25,9.95],[76.6,8.9],[77.55,8.08],[78.15,8.8],[79.1,9.25],[79.85,10.3],[79.85,10.75],[80.3,13.1],[80.2,14.5],[81.2,16.2],[82.3,16.95],[83.3,17.7],[84.1,18.3],[84.9,19.3],[85.8,19.8],[86.7,20.3],[87.0,21.0],[88.1,21.65],[89.1,21.7],[90.3,21.9],[90.9,22.3],[91.8,22.3],[92.0,21.4],[92.9,20.1],[93.7,19.0],[94.3,17.9],[94.2,16.0],[95.2,15.8],[96.3,16.5],[97.6,16.5],[97.8,15.2],[98.2,14.1],[98.6,12.4],[98.6,10.0],[98.3,8.0],[98.9,8.0],[99.5,7.5],[100.0,6.6],[100,27],[40,27]],
+  [[79.95,9.8],[80.3,9.8],[81.2,8.6],[81.8,7.5],[81.9,6.8],[81.4,6.2],[80.6,5.95],[80.1,6.3],[79.85,7.0],[79.8,8.0],[79.9,8.9]],
+  [[95.2,5.6],[97.1,5.2],[98.7,3.8],[99.8,2.8],[100,2.4],[100,-0.8],[99.6,0.1],[98.8,1.75],[97.6,2.9],[96.1,4.15],[95.3,5.0]],
+  [[49.26,-11.95],[49.6,-12.5],[50.0,-13.4],[50.25,-14.3],[50.4,-15],[47.4,-15],[48.0,-14.0],[48.7,-12.9]],
+  [[92.7,13.6],[93.05,12.5],[92.85,10.6],[92.5,11.5]],
+  [[53.3,12.65],[54.5,12.7],[54.4,12.3],[53.6,12.3]]
+];
+const POLY_BB = POLYS.map((p) => { let a = 1e9, b = -1e9, c = 1e9, d = -1e9; for (const [x, y] of p) { a = Math.min(a, x); b = Math.max(b, x); c = Math.min(c, y); d = Math.max(d, y); } return [a, b, c, d]; });
+function inPoly(px, py, poly) {
+  let c = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const xi = poly[i][0], yi = poly[i][1], xj = poly[j][0], yj = poly[j][1];
+    if (((yi > py) !== (yj > py)) && (px < (xj - xi) * (py - yi) / (yj - yi) + xi)) c = !c;
+  }
+  return c;
+}
+function isLand(lon, lat) {
+  for (let n = 0; n < POLYS.length; n++) {
+    const bb = POLY_BB[n];
+    if (lon < bb[0] || lon > bb[1] || lat < bb[2] || lat > bb[3]) continue;
+    if (inPoly(lon, lat, POLYS[n])) return true;
+  }
+  return false;
+}
+const CIR = [[51,13.2],[57,12.5],[60,9],[63.5,5],[66.5,1],[67,-4],[67.8,-10],[68.5,-15]];
+const CLR = [[72.2,14.5],[72.8,8],[73.3,2],[72.4,-5],[71.8,-8]];
+const NER = [[89.2,10],[89.6,0],[88.8,-10],[88.4,-15]];
+function distPolyline(lon, lat, pts) {
+  let best = 1e9;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const ax = pts[i][0], ay = pts[i][1], dx = pts[i + 1][0] - ax, dy = pts[i + 1][1] - ay;
+    const t = clamp(((lon - ax) * dx + (lat - ay) * dy) / (dx * dx + dy * dy), 0, 1);
+    best = Math.min(best, Math.hypot(ax + t * dx - lon, ay + t * dy - lat));
+  }
+  return best;
+}
+
+/* ---------------- Ocean physics-shaped profiles ---------------- */
+function tempFn(sst, mld, d20, eddy, d) {
+  const top = sst - 0.002 * mld;
+  if (d <= mld) return sst - 0.002 * d;
+  const de = Math.max(mld, d - eddy * 45 * Math.exp(-d / 900));
+  const tdeep = 1.6 + 13.8 * Math.exp(-de / 720);
+  const t20 = 1.6 + 13.8 * Math.exp(-d20 / 720);
+  const P20 = clamp((20 - t20) / (top - t20), 0.05, 0.95);
+  const L = (d20 - mld) / Math.pow(-Math.log(P20), 0.8);
+  const P = Math.exp(-Math.pow((de - mld) / L, 1.25));
+  return tdeep + (top - tdeep) * P;
+}
+function salFn(sss, hs, rsw, pgw, d) {
+  const sdeep = 34.72 + 0.26 * Math.exp(-d / 850);
+  let S = sdeep + (sss - 34.98) * Math.exp(-Math.pow(d / hs, 1.6));
+  S += rsw * 0.42 * Math.exp(-Math.pow((d - 720) / 230, 2));
+  S += pgw * 0.38 * Math.exp(-Math.pow((d - 280) / 110, 2));
+  return S;
+}
+
+const VARS = {
+  T: { name: 'Temperature', unit: '°C', q: [0, 31], range: [2, 30], step: 2, hi: 26, dec: 1,
+       note: 'The white line is 26 °C. Warmer water above it is the fuel cyclones feed on.' },
+  S: { name: 'Salinity', unit: 'PSU', q: [30, 37.5], range: [33, 36.6], step: 0.5, hi: null, dec: 2,
+       note: 'River water sits as a fresh lid on the Bay of Bengal. Salty Red Sea and Gulf water sinks to 300–800 m in the Arabian Sea.' },
+  V: { name: 'Current speed', unit: 'm/s', q: [0, 2.2], range: [0, 1.2], step: 0.2, hi: null, dec: 2,
+       note: 'In July the Somali Current races north along Africa and spins up the Great Whirl eddy.' }
+};
+const CMAPS = {
+  T: ['#042333','#15325f','#403891','#6b4d8c','#955d89','#c26b79','#ea7d5a','#f9a33e','#f7d34b','#e8fa5b'],
+  S: ['#2a186c','#122f9b','#1b5b8f','#2e7a86','#3b9981','#51b672','#86cd5a','#c9df5b','#fdef9a'],
+  V: ['#fffdcd','#e5dc92','#bdc05c','#86a43a','#4f8a2c','#1f6c2d','#155026','#173724']
+};
+const hexRgb = (h) => [parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255];
+const CMAP_RGB = {}; for (const k in CMAPS) CMAP_RGB[k] = CMAPS[k].map(hexRgb);
+function cmapAt(key, t) {
+  const st = CMAP_RGB[key], x = clamp(t, 0, 1) * (st.length - 1), i = Math.min(st.length - 2, Math.floor(x)), f = x - i;
+  return [st[i][0] + (st[i + 1][0] - st[i][0]) * f, st[i][1] + (st[i + 1][1] - st[i][1]) * f, st[i][2] + (st[i + 1][2] - st[i][2]) * f];
+}
+
+/* ---------------- Build the synthetic ocean ---------------- */
+function buildOcean() {
+  const landHi = new Uint8Array(LX * LY);
+  const offs = [[-0.0625, -0.0625], [0.0625, -0.0625], [-0.0625, 0.0625], [0.0625, 0.0625]];
+  for (let j = 0; j < LY; j++) {
+    const lat = LAT1 - j * 0.25;
+    for (let i = 0; i < LX; i++) {
+      const lon = LON0 + i * 0.25; let c = 0;
+      for (const o of offs) if (isLand(clamp(lon + o[0], LON0 + 0.01, LON1 - 0.01), clamp(lat + o[1], LAT0 + 0.01, LAT1 - 0.01))) c++;
+      landHi[j * LX + i] = Math.round(c / 4 * 255);
+    }
+  }
+  const landLo = new Uint8Array(N2);
+  for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++) landLo[j * NX + i] = landHi[(2 * j) * LX + 2 * i] >= 128 ? 1 : 0;
+
+  const dc = new Float32Array(N2);
+  for (let k = 0; k < N2; k++) dc[k] = landLo[k] ? 0 : 1e6;
+  const s1 = 0.5, s2 = 0.7071;
+  for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++) {
+    const k = j * NX + i; let d = dc[k];
+    if (i > 0) d = Math.min(d, dc[k - 1] + s1);
+    if (j > 0) { d = Math.min(d, dc[k - NX] + s1); if (i > 0) d = Math.min(d, dc[k - NX - 1] + s2); if (i < NX - 1) d = Math.min(d, dc[k - NX + 1] + s2); }
+    dc[k] = d;
+  }
+  for (let j = NY - 1; j >= 0; j--) for (let i = NX - 1; i >= 0; i--) {
+    const k = j * NX + i; let d = dc[k];
+    if (i < NX - 1) d = Math.min(d, dc[k + 1] + s1);
+    if (j < NY - 1) { d = Math.min(d, dc[k + NX] + s1); if (i < NX - 1) d = Math.min(d, dc[k + NX + 1] + s2); if (i > 0) d = Math.min(d, dc[k + NX - 1] + s2); }
+    dc[k] = d;
+  }
+
+  const F = () => new Float32Array(N2);
+  const sst = F(), mld = F(), d20 = F(), eddy = F(), sss = F(), hs = F(), rsw = F(), pgw = F(), bathy = F(), cu = F(), cv = F(), hu = F();
+  const psi = (a, b) => fbm(a * 0.22 + 11, b * 0.22 - 5, 3);
+
+  for (let j = 0; j < NY; j++) {
+    const lat = LAT1 - j * 0.5;
+    for (let i = 0; i < NX; i++) {
+      const lon = LON0 + i * 0.5, k = j * NX + i, d0 = dc[k];
+      const e = fbm(lon * 0.2 + 5.1, lat * 0.2 - 3.7, 4), e2 = fbm(lon * 0.6 - 2, lat * 0.6 + 8, 3);
+      eddy[k] = e;
+      const wA = smoothstep(77, 70, lon) * smoothstep(-1, 4, lat);
+      const wUp = smoothstep(63, 58, lon) * smoothstep(1, 5, lat) * smoothstep(24, 20, lat);
+      const wK = smoothstep(78, 76.5, lon) * smoothstep(6, 8, lat) * smoothstep(15, 12, lat);
+      const wB = smoothstep(79, 83, lon) * smoothstep(4, 9, lat);
+
+      let t = 28.9 - Math.max(0, -lat - 3) * 0.12;
+      t -= 1.1 * wA;
+      t -= 4.2 * wUp * Math.exp(-d0 / 1.4);
+      t -= 1.4 * Math.exp(-(((lon - 54) / 3) ** 2 + ((lat - 10.5) / 1.5) ** 2));
+      t -= 1.6 * wK * Math.exp(-d0 / 0.9);
+      t += 0.5 * wB + 0.45 * e + 0.2 * e2;
+      sst[k] = t;
+
+      let m = 48 + 42 * wA * smoothstep(3, 10, lat);
+      m *= 1 - 0.6 * wUp * Math.exp(-d0 / 2);
+      m += (62 - m) * wB;
+      m = clamp(m + 8 * e, 12, 110);
+      let z20 = 112 + 28 * smoothstep(-2, -12, lat);
+      z20 -= 45 * Math.exp(-(((lat + 8) / 2.5) ** 2)) * smoothstep(86, 76, lon);
+      z20 -= 70 * wUp * Math.exp(-d0 / 2.2);
+      z20 += 55 * Math.exp(-((lon - 54) ** 2 + (lat - 6.5) ** 2) / 6.25);
+      z20 += (95 - z20) * wB;
+      z20 -= 45 * wK * Math.exp(-d0 / 1.5);
+      z20 += 38 * e;
+      mld[k] = m; d20[k] = Math.max(z20, m + 18, 40);
+
+      let s = 34.95 - 0.45 * smoothstep(-4, -13, lat) * smoothstep(75, 90, lon);
+      s += wA * (1.05 + 0.05 * Math.max(0, lat - 8));
+      const wB2 = smoothstep(78.5, 81.5, lon) * smoothstep(3, 8, lat);
+      const plume = Math.exp(-(((lon - 89.5) / 3.5) ** 2 + ((lat - 21) / 3) ** 2));
+      const eicc = smoothstep(84.5, 80.5, lon) * smoothstep(8, 11, lat) * Math.exp(-d0 / 1.2);
+      s -= wB2 * (0.6 + 0.12 * Math.max(0, lat - 6)) + 1.6 * plume * wB2 + 0.9 * eicc;
+      sss[k] = s + 0.08 * e2;
+      const hA = 110 + 80 * wA;
+      hs[k] = hA + (32 - hA) * wB2;
+      rsw[k] = Math.exp(-Math.hypot(lon - 46, lat - 12.3) / 11) * smoothstep(-8, 0, lat);
+      pgw[k] = Math.exp(-Math.hypot(lon - 57.5, lat - 23.8) / 8);
+
+      const base = 4300 + 350 * fbm(lon * 0.25 + 3, lat * 0.25 - 7, 3);
+      let dep = 40 + (base - 40) * Math.pow(smoothstep(0, 3.2, d0), 0.7);
+      if (lon > 79 && lon < 95 && lat > 8) dep = Math.min(dep, 1300 + Math.max(0, 22 - lat) * 210);
+      if (lon > 60 && lon < 71 && lat > 15) dep = Math.min(dep, 2500 + (24 - lat) * 200);
+      const rC = distPolyline(lon, lat, CIR);
+      dep -= 2100 * Math.exp(-((rC / 1.3) ** 2)); dep += 500 * Math.exp(-((rC / 0.3) ** 2));
+      dep -= Math.max(0, dep - 600) * 0.8 * Math.exp(-((distPolyline(lon, lat, CLR) / 1.0) ** 2));
+      dep -= 2200 * Math.exp(-((distPolyline(lon, lat, NER) / 0.9) ** 2));
+      dep += 180 * fbm(lon * 0.9, lat * 0.9, 3);
+      bathy[k] = landLo[k] ? 0 : clamp(dep, 25, 5200);
+
+      let u = 0, v = 0;
+      const wS = smoothstep(56, 50, lon) * smoothstep(-4, -1, lat) * smoothstep(12, 9, lat);
+      const jet = 1.7 * wS * Math.exp(-d0 / 1.6) * smoothstep(0, 0.4, d0);
+      u += 0.45 * jet; v += 0.9 * jet;
+      { const dx = lon - 54, dy = lat - 7, mg = 1.25 * Math.exp(-(dx * dx + dy * dy) / 10.24); u += dy / 3.2 * mg; v -= dx / 3.2 * mg; }
+      u += 0.3 * wA * smoothstep(0, 2, d0) * smoothstep(4, 8, lat) * smoothstep(20, 15, lat);
+      u += 0.75 * Math.exp(-(((lat - 5.5) / 2.2) ** 2)) * smoothstep(56, 62, lon) * smoothstep(90, 84, lon);
+      const wT = Math.exp(-(((lon - 85) / 2.2) ** 2)) * smoothstep(4, 7, lat) * smoothstep(15, 11, lat);
+      v += 0.6 * wT; u += 0.1 * wT;
+      u -= 0.45 * Math.exp(-(((lat + 11) / 2.6) ** 2));
+      const wE = smoothstep(78.5, 81, lon) * smoothstep(10, 12, lat) * smoothstep(21, 19, lat) * Math.exp(-d0 / 1.0) * smoothstep(0, 0.3, d0);
+      v += 0.45 * wE; u += 0.22 * wE;
+      const wW = smoothstep(77.5, 75.5, lon) * smoothstep(8, 10, lat) * smoothstep(22, 19, lat) * Math.exp(-d0 / 1.0) * smoothstep(0, 0.3, d0);
+      v -= 0.4 * wW; u += 0.08 * wW;
+      const ep = 0.25;
+      u += 0.45 * (psi(lon, lat + ep) - psi(lon, lat - ep)) / (2 * ep);
+      v -= 0.45 * (psi(lon + ep, lat) - psi(lon - ep, lat)) / (2 * ep);
+      const damp = landLo[k] ? 0 : smoothstep(0, 0.6, d0);
+      cu[k] = u * damp; cv[k] = v * damp; hu[k] = 140 + 80 * wS;
+    }
+  }
+
+  const volT = new Float32Array(N2 * NZ), volS = new Float32Array(N2 * NZ), volV = new Float32Array(N2 * NZ);
+  const q = (x, r) => clamp((x - r[0]) / (r[1] - r[0]), 0, 1);
+  for (let kz = 0; kz < NZ; kz++) {
+    const sN = kz / (NZ - 1), d = DMAX * sN * sN, off = kz * N2;
+    for (let k = 0; k < N2; k++) {
+      volT[off + k] = q(tempFn(sst[k], mld[k], d20[k], eddy[k], d), VARS.T.q);
+      volS[off + k] = q(salFn(sss[k], hs[k], rsw[k], pgw[k], d), VARS.S.q);
+      volV[off + k] = q(Math.hypot(cu[k], cv[k]) * Math.exp(-d / hu[k]), VARS.V.q);
+    }
+  }
+  const bathyS = new Uint8Array(N2);
+  for (let k = 0; k < N2; k++) bathyS[k] = landLo[k] ? 0 : Math.round(Math.sqrt(Math.min(bathy[k], DMAX) / DMAX) * 255);
+
+  return { landHi, landLo, dc, sst, mld, d20, eddy, sss, hs, rsw, pgw, bathy, bathyS, cu, cv, hu, vol: { T: volT, S: volS, V: volV } };
+}
+
+/* ---------------- Start ---------------- */
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ canvas: $('c'), antialias: true }); }
+catch (err) { showFatal('WebGL is turned off or unavailable in this browser.'); return; }
+if (!renderer.capabilities.isWebGL2) { showFatal('This demo needs WebGL 2. Try a recent Chrome, Edge, Firefox or Safari.'); return; }
+
+requestAnimationFrame(() => setTimeout(init, 30));
+
+function init() {
+const O = buildOcean();
+const stage = $('stage'), canvas = $('c');
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#E6EBE8');
+const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 100);
+
+const f32b = new Float32Array(1), i32b = new Int32Array(f32b.buffer);
+function toHalf(val) {
+  f32b[0] = val; const x = i32b[0];
+  let bits = (x >> 16) & 0x8000, m = (x >> 12) & 0x07ff; const e = (x >> 23) & 0xff;
+  if (e < 103) return bits;
+  if (e > 142) { bits |= 0x7c00; return bits; }
+  if (e < 113) { m |= 0x0800; bits |= (m >> (114 - e)) + ((m >> (113 - e)) & 1); return bits; }
+  bits |= ((e - 112) << 10) | (m >> 1); bits += m & 1; return bits;
+}
+function tex3D(src) {
+  const data = new Uint16Array(src.length);
+  for (let i = 0; i < src.length; i++) data[i] = toHalf(src[i]);
+  const t = new THREE.DataTexture3D(data, NX, NY, NZ);
+  t.format = THREE.RedFormat; t.type = THREE.HalfFloatType;
+  t.minFilter = THREE.LinearFilter; t.magFilter = THREE.LinearFilter; t.unpackAlignment = 1; t.needsUpdate = true;
+  return t;
+}
+function tex2D(data, w, h) {
+  const t = new THREE.DataTexture(data, w, h, THREE.RedFormat, THREE.UnsignedByteType);
+  t.minFilter = THREE.LinearFilter; t.magFilter = THREE.LinearFilter; t.unpackAlignment = 1; t.needsUpdate = true;
+  return t;
+}
+function cmapTex(key) {
+  const d = new Uint8Array(256 * 4);
+  for (let i = 0; i < 256; i++) { const c = cmapAt(key, i / 255); d[i * 4] = c[0] * 255; d[i * 4 + 1] = c[1] * 255; d[i * 4 + 2] = c[2] * 255; d[i * 4 + 3] = 255; }
+  const t = new THREE.DataTexture(d, 256, 1, THREE.RGBAFormat, THREE.UnsignedByteType);
+  t.minFilter = THREE.LinearFilter; t.magFilter = THREE.LinearFilter; t.needsUpdate = true;
+  return t;
+}
+const TEX = { T: tex3D(O.vol.T), S: tex3D(O.vol.S), V: tex3D(O.vol.V) };
+const CTEX = { T: cmapTex('T'), S: cmapTex('S'), V: cmapTex('V') };
+
+const uniforms = {
+  uVol: { value: TEX.T }, uLand: { value: tex2D(O.landHi, LX, LY) }, uBathy: { value: tex2D(O.bathyS, NX, NY) },
+  uCmap: { value: CTEX.T }, uCut: { value: new THREE.Vector3(1e3, 1e3, 1e3) }, uHalf: { value: new THREE.Vector2(HX, HZ) },
+  uH: { value: view.H }, uGamma: { value: view.gamma }, uQ: { value: new THREE.Vector2(0, 31) }, uRange: { value: new THREE.Vector2(2, 30) },
+  uStep: { value: 2 }, uContours: { value: 1 }, uHi: { value: 26 },
+  uGrid: { value: new THREE.Vector3(NX, NY, NZ) }, uLandGrid: { value: new THREE.Vector2(LX, LY) }
+};
+
+const faceMat = new THREE.ShaderMaterial({
+  uniforms,
+  extensions: { derivatives: true },
+  polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1,
+  vertexShader: `
+    varying vec3 vW; varying vec3 vN;
+    void main(){
+      vec4 w = modelMatrix * vec4(position, 1.0);
+      vW = w.xyz; vN = normalize(mat3(modelMatrix) * normal);
+      gl_Position = projectionMatrix * viewMatrix * w;
+    }`,
+  fragmentShader: `
+    precision highp float;
+    precision highp sampler3D;
+    uniform sampler3D uVol; uniform sampler2D uLand; uniform sampler2D uBathy; uniform sampler2D uCmap;
+    uniform vec3 uCut; uniform vec2 uHalf; uniform float uH; uniform float uGamma;
+    uniform vec2 uQ; uniform vec2 uRange; uniform float uStep; uniform float uContours; uniform float uHi;
+    uniform vec3 uGrid; uniform vec2 uLandGrid;
+    varying vec3 vW; varying vec3 vN;
+    float tc(float f, float n){ return (f * (n - 1.0) + 0.5) / n; }
+    float isoLine(float v, float stepv, float width){
+      float f = v / stepv;
+      float g = abs(fract(f - 0.5) - 0.5) / max(fwidth(f), 1e-3);
+      return 1.0 - smoothstep(0.0, width, g);
+    }
+    float nearLine(float v, float target, float width){
+      return 1.0 - smoothstep(0.0, width, abs(v - target) / max(fwidth(v), 1e-5));
+    }
+    void main(){
+      vec3 p = vW;
+      if (p.x > uCut.x && p.y > uCut.y && p.z > uCut.z) discard;
+      vec3 n = normalize(vN);
+      float fu = clamp((p.x + uHalf.x) / (2.0 * uHalf.x), 0.0, 1.0);
+      float fv = clamp((p.z + uHalf.y) / (2.0 * uHalf.y), 0.0, 1.0);
+      float t = clamp(-p.y / uH, 0.0, 1.0);
+      float s = pow(t, 0.5 / uGamma);
+      float depth = 4000.0 * s * s;
+      float land = texture(uLand, vec2(tc(fu, uLandGrid.x), tc(fv, uLandGrid.y))).r;
+      float bed = texture(uBathy, vec2(tc(fu, uGrid.x), tc(fv, uGrid.y))).r;
+      float q = texture(uVol, vec3(tc(fu, uGrid.x), tc(fv, uGrid.y), tc(s, uGrid.z))).r;
+      float val = mix(uQ.x, uQ.y, q);
+      float iso = isoLine(val, uStep, 1.0);
+      float hi = uHi > -900.0 ? nearLine(val, uHi, 1.4) : 0.0;
+      float coast = nearLine(land, 0.5, 1.2);
+      float bedLine = nearLine(s - bed, 0.0, 1.1);
+      float lonD = 40.0 + fu * 60.0, latD = 27.0 - fv * 42.0;
+      float grat = max(isoLine(lonD, 10.0, 0.8), isoLine(latD, 10.0, 0.8));
+      float equator = nearLine(latD, 0.0, 0.9);
+      float dl = max(max(nearLine(depth, 500.0, 0.8), nearLine(depth, 1000.0, 0.8)), max(nearLine(depth, 2000.0, 0.8), nearLine(depth, 3000.0, 0.8)));
+
+      bool isSurface = n.y > 0.5 && p.y > -0.001;
+      bool isVert = abs(n.y) < 0.5;
+      vec3 ink = vec3(0.110, 0.165, 0.208);
+      vec3 col;
+      if (land > 0.5) {
+        col = isSurface ? vec3(0.847, 0.796, 0.659) : vec3(0.760, 0.700, 0.575) * (0.95 + 0.05 * sin(depth * 0.012));
+      } else if (s > bed) {
+        vec2 cell = floor(vec2((p.x + p.z) * 70.0, p.y * 120.0));
+        float h = fract(sin(dot(cell, vec2(12.9898, 78.233))) * 43758.5453);
+        col = vec3(0.455, 0.430, 0.385) * (0.93 + 0.08 * h);
+      } else {
+        float c = clamp((val - uRange.x) / (uRange.y - uRange.x), 0.0, 1.0);
+        col = texture(uCmap, vec2(0.002 + c * 0.996, 0.5)).rgb;
+        if (uContours > 0.5) {
+          col = mix(col, col * 0.6, iso * 0.5);
+          col = mix(col, vec3(1.0), hi * 0.9);
+        }
+        col = mix(col, ink, bedLine * 0.6);
+      }
+      col = mix(col, ink, coast * 0.75);
+      if (isSurface) { col = mix(col, ink, grat * 0.2); col = mix(col, ink, equator * 0.22); }
+      if (isVert) col = mix(col, ink, dl * 0.16);
+      float shade = 0.84 + 0.16 * max(dot(n, normalize(vec3(0.45, 1.0, 0.7))), 0.0);
+      gl_FragColor = vec4(col * shade, 1.0);
+    }`
+});
+
+const planeGeo = new THREE.PlaneGeometry(1, 1);
+const faces = {};
+['top', 'bottom', 'east', 'west', 'south', 'north', 'kx', 'kz', 'ky'].forEach((n) => { const m = new THREE.Mesh(planeGeo, faceMat); faces[n] = m; scene.add(m); });
+const faceList = Object.values(faces);
+
+const edgeGeo = new THREE.BufferGeometry();
+const edges = new THREE.LineSegments(edgeGeo, new THREE.LineBasicMaterial({ color: 0x1C2A35, transparent: true, opacity: 0.55 }));
+scene.add(edges);
+
+const shadowCanvas = document.createElement('canvas'); shadowCanvas.width = shadowCanvas.height = 256;
+{ const g = shadowCanvas.getContext('2d'); const gr = g.createRadialGradient(128, 128, 30, 128, 128, 128);
+  gr.addColorStop(0, 'rgba(28,42,53,0.30)'); gr.addColorStop(0.55, 'rgba(28,42,53,0.12)'); gr.addColorStop(1, 'rgba(28,42,53,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, 256, 256); }
+const shadow = new THREE.Mesh(new THREE.PlaneGeometry(W * 1.55, DZ * 1.7), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(shadowCanvas), transparent: true, depthWrite: false }));
+shadow.rotation.x = -Math.PI / 2; scene.add(shadow);
+
+/* ---------------- Knife state ---------------- */
+const knife = { lon: 100, lat: -15, depth: 0 };
+let cut = null;
+function computeCut() {
+  const empty = knife.lon >= LON1 - 0.01 || knife.lat <= LAT0 + 0.01 || knife.depth <= 1;
+  const allX = knife.lon <= LON0 + 0.01, allZ = knife.lat >= LAT1 - 0.01, allY = knife.depth >= DMAX - 1;
+  const cx = lonToX(knife.lon), cz = latToZ(knife.lat), cy = depthToY(knife.depth);
+  const tx = empty ? 1e3 : (allX ? -1e3 : cx + 1e-4);
+  const ty = empty ? 1e3 : (allY ? -1e3 : cy + 1e-4);
+  const tz = empty ? 1e3 : (allZ ? -1e3 : cz + 1e-4);
+  return { empty, allX, allY, allZ, cx, cy, cz, tx, ty, tz };
+}
+const inRemoved = (x, y, z) => x > cut.tx && y > cut.ty && z > cut.tz;
+
+function placeFaces() {
+  const H = view.H, f = faces;
+  f.top.rotation.set(-Math.PI / 2, 0, 0); f.top.scale.set(W, DZ, 1); f.top.position.set(0, 0, 0);
+  f.bottom.rotation.set(Math.PI / 2, 0, 0); f.bottom.scale.set(W, DZ, 1); f.bottom.position.set(0, -H, 0);
+  f.east.rotation.set(0, Math.PI / 2, 0); f.east.scale.set(DZ, H, 1); f.east.position.set(HX, -H / 2, 0);
+  f.west.rotation.set(0, -Math.PI / 2, 0); f.west.scale.set(DZ, H, 1); f.west.position.set(-HX, -H / 2, 0);
+  f.south.rotation.set(0, 0, 0); f.south.scale.set(W, H, 1); f.south.position.set(0, -H / 2, HZ);
+  f.north.rotation.set(0, Math.PI, 0); f.north.scale.set(W, H, 1); f.north.position.set(0, -H / 2, -HZ);
+  const c = cut, lx = HX - c.cx, lz = HZ - c.cz, ly = -c.cy;
+  f.kx.visible = !c.empty && !c.allX && lz > 1e-4 && ly > 1e-4;
+  f.kx.rotation.set(0, Math.PI / 2, 0); f.kx.scale.set(Math.max(lz, 1e-4), Math.max(ly, 1e-4), 1); f.kx.position.set(c.cx, c.cy / 2, (c.cz + HZ) / 2);
+  f.kz.visible = !c.empty && !c.allZ && lx > 1e-4 && ly > 1e-4;
+  f.kz.rotation.set(0, 0, 0); f.kz.scale.set(Math.max(lx, 1e-4), Math.max(ly, 1e-4), 1); f.kz.position.set((c.cx + HX) / 2, c.cy / 2, c.cz);
+  f.ky.visible = !c.empty && !c.allY && lx > 1e-4 && lz > 1e-4;
+  f.ky.rotation.set(-Math.PI / 2, 0, 0); f.ky.scale.set(Math.max(lx, 1e-4), Math.max(lz, 1e-4), 1); f.ky.position.set((c.cx + HX) / 2, c.cy, (c.cz + HZ) / 2);
+  shadow.position.y = -H - 0.01;
+  uniforms.uCut.value.set(c.tx, c.ty, c.tz);
+  uniforms.uH.value = view.H; uniforms.uGamma.value = view.gamma;
+}
+
+function buildEdges() {
+  const H = view.H, c = cut, pts = [];
+  const seg = (a, b) => { pts.push(a[0], a[1], a[2], b[0], b[1], b[2]); };
+  function clipped(a, b, axis) {
+    if (c.empty) { seg(a, b); return; }
+    const thr = [c.tx, c.ty, c.tz];
+    const others = [0, 1, 2].filter((q) => q !== axis);
+    const inside = others.every((q) => a[q] >= thr[q] - 1e-6);
+    if (!inside) { seg(a, b); return; }
+    const lo = Math.min(a[axis], b[axis]), hi = Math.max(a[axis], b[axis]), t = thr[axis];
+    if (t <= lo) return;
+    const end = Math.min(hi, t), p = a.slice(), q2 = a.slice();
+    p[axis] = lo; q2[axis] = end; seg(p, q2);
+  }
+  const X = [-HX, HX], Y = [-H, 0], Z = [-HZ, HZ];
+  for (const y of Y) for (const z of Z) clipped([-HX, y, z], [HX, y, z], 0);
+  for (const x of X) for (const z of Z) clipped([x, -H, z], [x, 0, z], 1);
+  for (const x of X) for (const y of Y) clipped([x, y, -HZ], [x, y, HZ], 2);
+  if (!c.empty) {
+    const cx = c.cx, cy = c.cy, cz = c.cz;
+    const rect = (p0, p1, p2, p3) => { seg(p0, p1); seg(p1, p2); seg(p2, p3); seg(p3, p0); };
+    if (faces.kx.visible) rect([cx, cy, cz], [cx, 0, cz], [cx, 0, HZ], [cx, cy, HZ]);
+    if (faces.kz.visible) rect([cx, cy, cz], [cx, 0, cz], [HX, 0, cz], [HX, cy, cz]);
+    if (faces.ky.visible) rect([cx, cy, cz], [HX, cy, cz], [HX, cy, HZ], [cx, cy, HZ]);
+  }
+  edgeGeo.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+  edgeGeo.computeBoundingSphere();
+}
+
+/* ---------------- CPU sampling for readouts ---------------- */
+function sampleGrid2(arr, fu, fv, nx, ny) {
+  const gx = clamp(fu, 0, 1) * (nx - 1), gy = clamp(fv, 0, 1) * (ny - 1);
+  const i = Math.min(nx - 2, Math.floor(gx)), j = Math.min(ny - 2, Math.floor(gy)), fx = gx - i, fy = gy - j;
+  const a = arr[j * nx + i], b = arr[j * nx + i + 1], c2 = arr[(j + 1) * nx + i], d = arr[(j + 1) * nx + i + 1];
+  return (a + (b - a) * fx) + ((c2 + (d - c2) * fx) - (a + (b - a) * fx)) * fy;
+}
+function sampleVol(key, fu, fv, s) {
+  const vol = O.vol[key], r = VARS[key].q;
+  const gx = clamp(fu, 0, 1) * (NX - 1), gy = clamp(fv, 0, 1) * (NY - 1), gz = clamp(s, 0, 1) * (NZ - 1);
+  const i = Math.min(NX - 2, Math.floor(gx)), j = Math.min(NY - 2, Math.floor(gy)), k = Math.min(NZ - 2, Math.floor(gz));
+  const fx = gx - i, fy = gy - j, fz = gz - k;
+  const at = (ii, jj, kk) => vol[kk * N2 + jj * NX + ii];
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const c00 = lerp(at(i, j, k), at(i + 1, j, k), fx), c10 = lerp(at(i, j + 1, k), at(i + 1, j + 1, k), fx);
+  const c01 = lerp(at(i, j, k + 1), at(i + 1, j, k + 1), fx), c11 = lerp(at(i, j + 1, k + 1), at(i + 1, j + 1, k + 1), fx);
+  const v = lerp(lerp(c00, c10, fy), lerp(c01, c11, fy), fz);
+  return r[0] + (r[1] - r[0]) * v;
+}
+function surfaceVel(lon, lat, d) {
+  const fu = (lon - LON0) / (LON1 - LON0), fv = (LAT1 - lat) / (LAT1 - LAT0);
+  const dec = Math.exp(-d / sampleGrid2(O.hu, fu, fv, NX, NY));
+  return [sampleGrid2(O.cu, fu, fv, NX, NY) * dec, sampleGrid2(O.cv, fu, fv, NX, NY) * dec];
+}
+const landAt = (lon, lat) => sampleGrid2(O.landHi, (lon - LON0) / (LON1 - LON0), (LAT1 - lat) / (LAT1 - LAT0), LX, LY) > 127;
+const seafloorAt = (lon, lat) => sampleGrid2(O.bathy, (lon - LON0) / (LON1 - LON0), (LAT1 - lat) / (LAT1 - LAT0), NX, NY);
+
+/* ---------------- Argo floats ---------------- */
+const rand = mulberry32(26067);
+const FLOAT_DEPTHS = []; { const NS = 44; for (let i = 0; i < NS; i++) { const s = i / (NS - 1) * Math.SQRT1_2; FLOAT_DEPTHS.push(DMAX * s * s); } }
+const floats = [];
+const floatGroup = new THREE.Group(); scene.add(floatGroup);
+const hitTargets = [];
+{
+  let tries = 0;
+  while (floats.length < 34 && tries++ < 6000) {
+    const lon = LON0 + 1 + rand() * (LON1 - LON0 - 2), lat = LAT0 + 1 + rand() * (LAT1 - LAT0 - 2);
+    const i = Math.round((lon - LON0) / 0.5), j = Math.round((LAT1 - lat) / 0.5), k = j * NX + i;
+    if (O.landLo[k] || O.bathy[k] < 2300 || O.dc[k] < 1.2) continue;
+    if (floats.some((f) => Math.hypot(f.lon - lon, f.lat - lat) < 3.6)) continue;
+    const inBay = lon > 80 && lat > 6;
+    const bD = (rand() - 0.5) * 36 + (inBay ? 14 : 0), bT = (rand() - 0.5) * 0.4 + (inBay ? 0.35 : 0), bM = (rand() - 0.5) * 12;
+    const bS = (rand() - 0.5) * 0.12 - (inBay ? 0.35 : 0);
+    const model = { T: [], S: [] }, obs = { T: [], S: [] };
+    for (const d of FLOAT_DEPTHS) {
+      model.T.push(tempFn(O.sst[k], O.mld[k], O.d20[k], O.eddy[k], d));
+      model.S.push(salFn(O.sss[k], O.hs[k], O.rsw[k], O.pgw[k], d));
+      obs.T.push(tempFn(O.sst[k] + bT, clamp(O.mld[k] + bM, 10, 120), Math.max(O.d20[k] + bD, O.mld[k] + 20), O.eddy[k], d) + (rand() - 0.5) * 0.16);
+      obs.S.push(salFn(O.sss[k] + bS, O.hs[k], O.rsw[k], O.pgw[k], d) + (rand() - 0.5) * 0.02);
+    }
+    const day = 1 + Math.floor(rand() * 10);
+    floats.push({ lon, lat, k, id: 2902100 + floats.length * 37 + Math.floor(rand() * 9), cycle: 40 + Math.floor(rand() * 180), day, model, obs });
+  }
+}
+const headMat = new THREE.MeshBasicMaterial({ color: 0xE0A21B });
+const inkMat = new THREE.MeshBasicMaterial({ color: 0x1C2A35 });
+const ribbonMat = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide });
+const hitMat = new THREE.MeshBasicMaterial({ visible: false });
+const ring = new THREE.Mesh(new THREE.TorusGeometry(0.055, 0.006, 8, 40), inkMat); ring.rotation.x = Math.PI / 2; ring.visible = false; scene.add(ring);
+floats.forEach((f, idx) => {
+  const g = new THREE.Group(); g.position.set(lonToX(f.lon), 0, latToZ(f.lat));
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.019, 0.019, 0.07, 14), headMat); body.position.y = 0.035; g.add(body);
+  const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.012, 14), inkMat); cap.position.y = 0.076; g.add(cap);
+  const ant = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.07, 6), inkMat); ant.position.y = 0.115; g.add(ant);
+  const hit = new THREE.Mesh(new THREE.SphereGeometry(0.075, 8, 6), hitMat); hit.position.y = 0.05; hit.userData.floatIndex = idx; g.add(hit); hitTargets.push(hit);
+  const NS = FLOAT_DEPTHS.length, pos = new Float32Array(NS * 4 * 3), col = new Float32Array(NS * 4 * 3), index = [];
+  for (let i = 0; i < NS - 1; i++) for (let q = 0; q < 2; q++) {
+    const a0 = i * 4 + q * 2, a1 = a0 + 1, b0 = a0 + 4, b1 = a1 + 4;
+    index.push(a0, b0, a1, a1, b0, b1);
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  geo.setIndex(index);
+  const rib = new THREE.Mesh(geo, ribbonMat); g.add(rib);
+  f.group = g; f.ribbon = rib; floatGroup.add(g);
+});
+function layoutFloats() {
+  const w = 0.012;
+  floats.forEach((f) => {
+    const pos = f.ribbon.geometry.attributes.position.array;
+    FLOAT_DEPTHS.forEach((d, i) => {
+      const y = depthToY(d), o = i * 12;
+      pos.set([-w, y, 0, w, y, 0, 0, y, -w, 0, y, w], o);
+    });
+    f.ribbon.geometry.attributes.position.needsUpdate = true;
+    f.ribbon.geometry.computeBoundingSphere();
+  });
+}
+function colorFloats() {
+  const key = state.var === 'V' ? null : state.var;
+  floats.forEach((f) => {
+    const colA = f.ribbon.geometry.attributes.color.array;
+    FLOAT_DEPTHS.forEach((d, i) => {
+      let c = [0.11, 0.165, 0.21];
+      if (key) { const v = f.obs[key][i]; c = cmapAt(key, (v - state.range[0]) / (state.range[1] - state.range[0])); }
+      for (let q = 0; q < 4; q++) colA.set(c, (i * 4 + q) * 3);
+    });
+    f.ribbon.geometry.attributes.color.needsUpdate = true;
+  });
+}
+
+/* ---------------- Surface current particles ---------------- */
+const NP = 800;
+const P = { lon: new Float32Array(NP), lat: new Float32Array(NP), age: new Float32Array(NP), life: new Float32Array(NP) };
+const pPos = new Float32Array(NP * 6), pCol = new Float32Array(NP * 6);
+for (let i = 0; i < NP; i++) { pCol.set([0.08, 0.12, 0.16, 0.80, 0.83, 0.82], i * 6); }
+const pGeo = new THREE.BufferGeometry();
+pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+pGeo.setAttribute('color', new THREE.BufferAttribute(pCol, 3));
+const particles = new THREE.LineSegments(pGeo, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.8, depthWrite: false }));
+particles.frustumCulled = false; scene.add(particles);
+function respawn(i) {
+  for (let t = 0; t < 30; t++) {
+    const lon = LON0 + Math.random() * (LON1 - LON0), lat = LAT0 + Math.random() * (LAT1 - LAT0);
+    if (!landAt(lon, lat)) { P.lon[i] = lon; P.lat[i] = lat; break; }
+  }
+  P.age[i] = 0; P.life[i] = 2 + Math.random() * 4;
+}
+for (let i = 0; i < NP; i++) { respawn(i); P.age[i] = Math.random() * P.life[i]; }
+function stepParticles(dt) {
+  const K = 2.0, TL = 2.6;
+  for (let i = 0; i < NP; i++) {
+    P.age[i] += dt;
+    let lon = P.lon[i], lat = P.lat[i];
+    const x = lonToX(lon), z = latToZ(lat);
+    let d = 0, hidden = false;
+    if (!cut.empty && x > cut.tx && z > cut.tz) { d = knife.depth; if (d >= DMAX - 1 || seafloorAt(lon, lat) <= d) hidden = true; }
+    const v = surfaceVel(lon, lat, d), sp = Math.hypot(v[0], v[1]);
+    lon += v[0] * K * dt; lat += v[1] * K * dt;
+    if (P.age[i] > P.life[i] || lon < LON0 || lon > LON1 || lat < LAT0 || lat > LAT1 || landAt(lon, lat)) { respawn(i); hidden = true; }
+    else { P.lon[i] = lon; P.lat[i] = lat; }
+    const o = i * 6;
+    if (hidden || sp < 0.08) { pPos[o] = pPos[o + 3] = 0; pPos[o + 1] = pPos[o + 4] = 50; pPos[o + 2] = pPos[o + 5] = 0; continue; }
+    const y = depthToY(d) + 0.004;
+    pPos[o] = lonToX(P.lon[i]); pPos[o + 1] = y; pPos[o + 2] = latToZ(P.lat[i]);
+    pPos[o + 3] = lonToX(P.lon[i] - v[0] * TL); pPos[o + 4] = y; pPos[o + 5] = latToZ(P.lat[i] - v[1] * TL);
+  }
+  pGeo.attributes.position.needsUpdate = true;
+}
+
+/* ---------------- Labels ---------------- */
+const labelsEl = $('labels');
+const labels = [];
+function addLabel(text, cls, getPos, surfaceLL) {
+  const el = document.createElement('div'); el.className = 'lab' + (cls ? ' ' + cls : ''); el.textContent = text; labelsEl.appendChild(el);
+  labels.push({ el, getPos, surfaceLL, align: cls === 'lab-left' ? 'left' : 'center' });
+}
+const fmtLon = (v) => `${Math.round(v * 10) / 10}°E`;
+const fmtLat = (v) => v === 0 ? '0°' : `${Math.abs(Math.round(v * 10) / 10)}°${v > 0 ? 'N' : 'S'}`;
+const fmtDepth = (d) => `${Math.round(d).toLocaleString('en-US')} m`;
+[50, 60, 70, 80, 90].forEach((lon) => addLabel(fmtLon(lon), '', () => new THREE.Vector3(lonToX(lon), -view.H - 0.02, HZ + 0.12)));
+[-10, 0, 10, 20].forEach((lat) => addLabel(fmtLat(lat), '', () => new THREE.Vector3(HX + 0.22, -view.H - 0.02, latToZ(lat))));
+let depthLabelSet = [];
+function rebuildDepthLabels() {
+  depthLabelSet.forEach((l) => { l.el.remove(); labels.splice(labels.indexOf(l), 1); });
+  const ds = view.gamma < 1 ? [0, 100, 250, 500, 1000, 2000, 4000] : [0, 1000, 2000, 3000, 4000];
+  const start = labels.length;
+  ds.forEach((d) => addLabel(fmtDepth(d), 'lab-left', () => new THREE.Vector3(-HX - 0.05, depthToY(d), HZ)));
+  depthLabelSet = labels.slice(start);
+}
+addLabel('Arabian Sea', 'geo', () => new THREE.Vector3(lonToX(64), 0.02, latToZ(14.5)), [64, 14.5]);
+addLabel('Bay of Bengal', 'geo', () => new THREE.Vector3(lonToX(88.5), 0.02, latToZ(14.5)), [88.5, 14.5]);
+addLabel('India', 'geo', () => new THREE.Vector3(lonToX(78), 0.02, latToZ(19.5)), [78, 19.5]);
+const tmpV = new THREE.Vector3();
+function updateLabels(wpx, hpx) {
+  for (const L of labels) {
+    const p = L.getPos();
+    let hide = false;
+    if (L.surfaceLL && inRemoved(lonToX(L.surfaceLL[0]), 0.001, latToZ(L.surfaceLL[1]))) hide = true;
+    tmpV.copy(p).project(camera);
+    if (tmpV.z > 1 || hide) { L.el.style.display = 'none'; continue; }
+    L.el.style.display = '';
+    const sx = (tmpV.x * 0.5 + 0.5) * wpx, sy = (-tmpV.y * 0.5 + 0.5) * hpx;
+    L.el.style.transform = L.align === 'left'
+      ? `translate(${sx}px, ${sy}px) translate(-100%, -50%)`
+      : `translate(${sx}px, ${sy}px) translate(-50%, -50%)`;
+  }
+}
+
+/* ---------------- Camera controls ---------------- */
+const cam = { r: 11.2, theta: 0.72, phi: 0.98, target: new THREE.Vector3(0.15, -0.75, 0.2) };
+function applyCamera() {
+  cam.phi = clamp(cam.phi, 0.12, 1.5); cam.r = clamp(cam.r, 3.5, 28);
+  const sp = Math.sin(cam.phi);
+  camera.position.set(cam.target.x + cam.r * sp * Math.sin(cam.theta), cam.target.y + cam.r * Math.cos(cam.phi), cam.target.z + cam.r * sp * Math.cos(cam.theta));
+  camera.lookAt(cam.target);
+}
+const pointers = new Map();
+let dragMode = null, downAt = null, moved = false, pinchDist = 0, hoverPos = null;
+canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+canvas.addEventListener('pointerdown', (e) => {
+  canvas.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  downAt = { x: e.clientX, y: e.clientY }; moved = false;
+  dragMode = (e.button === 2 || e.shiftKey) ? 'pan' : 'rotate';
+  if (pointers.size === 2) { const [a, b] = [...pointers.values()]; pinchDist = Math.hypot(a.x - b.x, a.y - b.y); }
+  canvas.style.cursor = 'grabbing'; hideTip();
+});
+canvas.addEventListener('pointermove', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  if (!pointers.has(e.pointerId)) { hoverPos = { x: e.clientX - rect.left, y: e.clientY - rect.top }; return; }
+  const prev = pointers.get(e.pointerId), dx = e.clientX - prev.x, dy = e.clientY - prev.y;
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y) > 4) moved = true;
+  if (pointers.size === 2) {
+    const [a, b] = [...pointers.values()], dist = Math.hypot(a.x - b.x, a.y - b.y);
+    if (pinchDist > 0) cam.r *= pinchDist / dist; pinchDist = dist;
+  } else if (dragMode === 'rotate') { cam.theta -= dx * 0.006; cam.phi -= dy * 0.006; }
+  else {
+    const right = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 0), up = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 1);
+    const k = cam.r * 0.0014;
+    cam.target.addScaledVector(right, -dx * k).addScaledVector(up, dy * k);
+  }
+  applyCamera();
+});
+function endPointer(e) {
+  if (!pointers.has(e.pointerId)) return;
+  pointers.delete(e.pointerId);
+  if (pointers.size < 2) pinchDist = 0;
+  if (pointers.size === 0) {
+    canvas.style.cursor = 'grab';
+    if (!moved && e.type === 'pointerup') { const rect = canvas.getBoundingClientRect(); pick(e.clientX - rect.left, e.clientY - rect.top); }
+  }
+}
+canvas.addEventListener('pointerup', endPointer);
+canvas.addEventListener('pointercancel', endPointer);
+canvas.addEventListener('pointerleave', () => { hoverPos = null; hideTip(); });
+canvas.addEventListener('wheel', (e) => { e.preventDefault(); cam.r *= Math.exp(e.deltaY * 0.0012); applyCamera(); }, { passive: false });
+const fitRadius = () => 11.2 * Math.max(1, 1.35 / Math.max(camera.aspect, 0.3));
+$('resetCam').addEventListener('click', () => { cam.r = fitRadius(); cam.theta = 0.72; cam.phi = 0.98; cam.target.set(0.15, -view.H * 0.47, 0.2); applyCamera(); });
+
+/* ---------------- Picking and hover ---------------- */
+const raycaster = new THREE.Raycaster(), ndc = new THREE.Vector2();
+const tip = $('tip');
+function hideTip() { tip.style.display = 'none'; }
+function castAt(px, py) {
+  ndc.set(px / canvas.clientWidth * 2 - 1, -(py / canvas.clientHeight) * 2 + 1);
+  raycaster.setFromCamera(ndc, camera);
+  let floatHit = null;
+  if (floatGroup.visible) { const fh = raycaster.intersectObjects(hitTargets, false); if (fh.length) floatHit = fh[0]; }
+  const hits = raycaster.intersectObjects(faceList.filter((m) => m.visible), false);
+  let faceHit = null;
+  for (const h of hits) { if (isOnKnife(h.object) || !inRemoved(h.point.x, h.point.y, h.point.z)) { faceHit = h; break; } }
+  if (floatHit && (!faceHit || floatHit.distance < faceHit.distance + 0.05)) return { type: 'float', index: floatHit.object.userData.floatIndex };
+  if (faceHit) return { type: 'face', point: faceHit.point };
+  return null;
+}
+const isOnKnife = (o) => o === faces.kx || o === faces.ky || o === faces.kz;
+function pick(px, py) {
+  const r = castAt(px, py);
+  if (r && r.type === 'float') selectFloat(r.index);
+}
+function hover(px, py) {
+  const r = castAt(px, py);
+  if (!r) { hideTip(); canvas.style.cursor = 'grab'; return; }
+  let html;
+  if (r.type === 'float') {
+    const f = floats[r.index]; canvas.style.cursor = 'pointer';
+    html = `<b>Argo float ${f.id}</b>Click to compare it with the model`;
+  } else {
+    canvas.style.cursor = 'grab';
+    const p = r.point, lon = xToLon(p.x), lat = zToLat(p.z);
+    const t = clamp(-p.y / view.H, 0, 1), s = Math.pow(t, 0.5 / view.gamma), d = DMAX * s * s;
+    const where = `${fmtLat(Math.round(lat * 10) / 10)}, ${fmtLon(Math.round(lon * 10) / 10)}`;
+    if (landAt(lon, lat)) html = `<b>Land</b>${where}`;
+    else if (d > seafloorAt(lon, lat) + 1) html = `<b>Seafloor</b>Ocean is ${fmtDepth(Math.round(seafloorAt(lon, lat) / 10) * 10)} deep here<br>${where}`;
+    else {
+      const key = state.var, cfg = VARS[key];
+      const v = sampleVol(key, (lon - LON0) / (LON1 - LON0), (LAT1 - lat) / (LAT1 - LAT0), s);
+      html = `<b>${v.toFixed(cfg.dec)} ${cfg.unit}</b>${d < 1 ? 'At the surface' : fmtDepth(d < 100 ? Math.round(d) : Math.round(d / 10) * 10) + ' deep'}<br>${where}`;
+    }
+  }
+  tip.innerHTML = html; tip.style.display = 'block';
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  const x = px + 16 + tw > canvas.clientWidth ? px - tw - 12 : px + 16;
+  const y = py + 16 + th > canvas.clientHeight ? py - th - 12 : py + 16;
+  tip.style.transform = `translate(${x}px, ${y}px)`;
+}
+
+/* ---------------- Float profile panel ---------------- */
+let selected = -1;
+const profile = $('profile'), pChart = $('p-chart');
+$('p-close').addEventListener('click', () => { selected = -1; profile.hidden = true; ring.visible = false; });
+function selectFloat(i) {
+  selected = i; const f = floats[i];
+  profile.hidden = false;
+  $('p-title').textContent = `Argo float ${f.id}`;
+  $('p-sub').textContent = `Dive ${f.cycle}, ${f.day} July 2026, ${fmtLat(Math.round(f.lat * 10) / 10)} ${fmtLon(Math.round(f.lon * 10) / 10)}`;
+  ring.position.set(lonToX(f.lon), 0.05, latToZ(f.lat)); ring.visible = true;
+  drawProfile();
+}
+function niceStep(span) { const raw = span / 4, p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+function drawProfile() {
+  if (selected < 0) return;
+  const f = floats[selected], key = state.var === 'S' ? 'S' : 'T', cfg = VARS[key];
+  const dpr = Math.min(window.devicePixelRatio || 1, 2), cw = pChart.clientWidth, ch = pChart.clientHeight;
+  pChart.width = cw * dpr; pChart.height = ch * dpr;
+  const g = pChart.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, cw, ch);
+  const L = 50, R = 10, T = 8, B = 34, w = cw - L - R, h = ch - T - B;
+  const mv = f.model[key], ov = f.obs[key];
+  let lo = Math.min(...mv, ...ov), hi = Math.max(...mv, ...ov); const pad = (hi - lo) * 0.06; lo -= pad; hi += pad;
+  const X = (v) => L + (v - lo) / (hi - lo) * w, Y = (d) => T + Math.sqrt(d / 2000) * h;
+  g.font = '500 12px "Barlow Semi Condensed", Arial Narrow, sans-serif'; g.fillStyle = '#556570'; g.strokeStyle = '#C6CFCC'; g.lineWidth = 1;
+  g.textAlign = 'right'; g.textBaseline = 'middle';
+  [0, 50, 100, 200, 500, 1000, 2000].forEach((d) => { const y = Math.round(Y(d)) + 0.5; g.beginPath(); g.moveTo(L, y); g.lineTo(L + w, y); g.stroke(); g.fillText(`${d} m`, L - 6, y); });
+  const st = niceStep(hi - lo); g.textAlign = 'center'; g.textBaseline = 'top';
+  for (let v = Math.ceil(lo / st) * st; v <= hi; v += st) { const x = Math.round(X(v)) + 0.5; g.beginPath(); g.moveTo(x, T); g.lineTo(x, T + h); g.stroke(); g.fillText(v.toFixed(st < 0.1 ? 2 : st < 1 ? 1 : 0), x, T + h + 5); }
+  g.fillText(`${cfg.name} (${cfg.unit})`, L + w / 2, T + h + 19);
+  g.strokeStyle = '#1C2A35'; g.lineWidth = 2; g.beginPath();
+  FLOAT_DEPTHS.forEach((d, i) => { const x = X(mv[i]), y = Y(d); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke();
+  g.fillStyle = '#E0A21B'; g.strokeStyle = '#1C2A35'; g.lineWidth = 0.8;
+  FLOAT_DEPTHS.forEach((d, i) => { g.beginPath(); g.arc(X(ov[i]), Y(d), 3, 0, Math.PI * 2); g.fill(); g.stroke(); });
+  let sum = 0, worst = 0, worstD = 0;
+  FLOAT_DEPTHS.forEach((d, i) => { const e = Math.abs(ov[i] - mv[i]); sum += e; if (e > worst) { worst = e; worstD = d; } });
+  const avg = sum / FLOAT_DEPTHS.length;
+  $('p-stat').textContent = `${state.var === 'V' ? 'Floats measure temperature and salinity, so this shows temperature. ' : ''}The model is off by ${avg.toFixed(cfg.dec)} ${cfg.unit} on average, most at ${fmtDepth(Math.round(worstD / 5) * 5)} (${worst.toFixed(cfg.dec)} ${cfg.unit}).`;
+}
+
+/* ---------------- UI state ---------------- */
+const state = { var: 'T', range: VARS.T.range.slice() };
+const kLon = $('kLon'), kLat = $('kLat'), kDep = $('kDep');
+const depthFromSlider = (v) => DMAX * Math.pow(v / 1000, 2);
+const sliderFromDepth = (d) => Math.sqrt(d / DMAX) * 1000;
+function roundDepth(d) { return d < 200 ? Math.round(d / 5) * 5 : d < 1000 ? Math.round(d / 10) * 10 : Math.round(d / 50) * 50; }
+function syncKnifeUI() {
+  kLon.value = knife.lon; kLat.value = knife.lat; kDep.value = sliderFromDepth(knife.depth);
+  $('oLon').textContent = knife.lon >= LON1 ? 'Nothing' : fmtLon(knife.lon);
+  $('oLat').textContent = knife.lat <= LAT0 ? 'Nothing' : fmtLat(knife.lat);
+  $('oDep').textContent = knife.depth <= 1 ? 'No cut' : knife.depth >= DMAX - 1 ? 'Seafloor' : fmtDepth(roundDepth(knife.depth));
+}
+function applyKnife() { cut = computeCut(); placeFaces(); buildEdges(); syncKnifeUI(); }
+let anim = null;
+function stopAnim() { if (anim) { cancelAnimationFrame(anim.raf); anim = null; $('dive').textContent = 'Dive from surface to 2,000 m'; } }
+kLon.addEventListener('input', () => { stopAnim(); knife.lon = +kLon.value; applyKnife(); });
+kLat.addEventListener('input', () => { stopAnim(); knife.lat = +kLat.value; applyKnife(); });
+kDep.addEventListener('input', () => { stopAnim(); knife.depth = roundDepth(depthFromSlider(+kDep.value)); applyKnife(); });
+const PRESETS = { corner: [75, 12, 1200], lat15: [40, 15, 4000], lon88: [88, 27, 4000], peel: [40, 27, 100], whole: [100, -15, 0] };
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function animateKnife(to, ms, onDone, label) {
+  stopAnim();
+  if (reduceMotion) { knife.lon = to[0]; knife.lat = to[1]; knife.depth = to[2]; applyKnife(); if (onDone) onDone(); return; }
+  const from = [knife.lon, knife.lat, sliderFromDepth(knife.depth)], goal = [to[0], to[1], sliderFromDepth(to[2])], t0 = performance.now();
+  anim = { raf: 0 };
+  if (label) $('dive').textContent = label;
+  const tick = (now) => {
+    const t = clamp((now - t0) / ms, 0, 1), e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    knife.lon = from[0] + (goal[0] - from[0]) * e; knife.lat = from[1] + (goal[1] - from[1]) * e;
+    knife.depth = depthFromSlider(from[2] + (goal[2] - from[2]) * e);
+    applyKnife();
+    if (t < 1) anim.raf = requestAnimationFrame(tick); else { anim = null; $('dive').textContent = 'Dive from surface to 2,000 m'; if (onDone) onDone(); }
+  };
+  anim.raf = requestAnimationFrame(tick);
+}
+document.querySelectorAll('[data-preset]').forEach((b) => b.addEventListener('click', () => animateKnife(PRESETS[b.dataset.preset], 900)));
+$('dive').addEventListener('click', () => {
+  if (anim) { stopAnim(); return; }
+  knife.lon = 40; knife.lat = 27; knife.depth = 0; applyKnife();
+  animateKnife([40, 27, 2000], 7000, null, 'Stop dive');
+});
+
+$('exag').addEventListener('input', (e) => { view.H = +e.target.value; onViewChange(); });
+$('stretch').addEventListener('change', (e) => { view.gamma = e.target.checked ? 0.5 : 1; rebuildDepthLabels(); onViewChange(); });
+$('showFloats').addEventListener('change', (e) => { floatGroup.visible = e.target.checked; if (!e.target.checked) { ring.visible = false; profile.hidden = true; selected = -1; } });
+$('showFlow').addEventListener('change', (e) => { particles.visible = e.target.checked; });
+$('showContours').addEventListener('change', (e) => { uniforms.uContours.value = e.target.checked ? 1 : 0; });
+function onViewChange() { $('oExag').textContent = `${view.H.toFixed(2)} units`; applyKnife(); layoutFloats(); }
+
+document.querySelectorAll('[data-var]').forEach((b) => b.addEventListener('click', () => setVar(b.dataset.var)));
+function setVar(key) {
+  state.var = key; const cfg = VARS[key];
+  document.querySelectorAll('[data-var]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.var === key)));
+  uniforms.uVol.value = TEX[key]; uniforms.uCmap.value = CTEX[key];
+  uniforms.uQ.value.set(cfg.q[0], cfg.q[1]); uniforms.uStep.value = cfg.step; uniforms.uHi.value = cfg.hi === null ? -999 : cfg.hi;
+  $('varNote').textContent = cfg.note;
+  setRange(cfg.range[0], cfg.range[1]);
+}
+function setRange(a, b) {
+  state.range = [a, b]; uniforms.uRange.value.set(a, b);
+  const cfg = VARS[state.var];
+  $('rMin').value = +a.toFixed(cfg.dec); $('rMax').value = +b.toFixed(cfg.dec); $('rangeErr').textContent = '';
+  $('cbTitle').textContent = `Colour scale, ${cfg.name.toLowerCase()} in ${cfg.unit}`;
+  drawColorbar(); colorFloats(); drawProfile();
+}
+function tryRange() {
+  const a = parseFloat($('rMin').value), b = parseFloat($('rMax').value);
+  if (!isFinite(a) || !isFinite(b)) { $('rangeErr').textContent = 'Enter a number in both boxes.'; return; }
+  if (a >= b) { $('rangeErr').textContent = 'Lowest must be smaller than highest.'; return; }
+  setRange(a, b);
+}
+$('rMin').addEventListener('change', tryRange); $('rMax').addEventListener('change', tryRange);
+$('rMin').addEventListener('input', () => { $('rangeErr').textContent = ''; });
+$('rMax').addEventListener('input', () => { $('rangeErr').textContent = ''; });
+$('rReset').addEventListener('click', () => setRange(...VARS[state.var].range));
+function drawColorbar() {
+  const cb = $('cbar'), dpr = Math.min(window.devicePixelRatio || 1, 2), cw = cb.clientWidth || 270, ch = 16;
+  cb.width = cw * dpr; cb.height = ch * dpr; const g = cb.getContext('2d');
+  for (let x = 0; x < cb.width; x++) { const c = cmapAt(state.var, x / (cb.width - 1)); g.fillStyle = `rgb(${c[0] * 255 | 0},${c[1] * 255 | 0},${c[2] * 255 | 0})`; g.fillRect(x, 0, 1, cb.height); }
+  const cfg = VARS[state.var];
+  if (cfg.hi !== null) { const x = (cfg.hi - state.range[0]) / (state.range[1] - state.range[0]); if (x > 0 && x < 1) { g.fillStyle = '#fff'; g.fillRect(Math.round(x * cb.width) - dpr, 0, 2 * dpr, cb.height); } }
+  const r = state.range, d = cfg.dec;
+  $('t0').textContent = r[0].toFixed(d); $('t1').textContent = ((r[0] + r[1]) / 2).toFixed(d); $('t2').textContent = r[1].toFixed(d);
+}
+
+/* ---------------- Resize and loop ---------------- */
+function resize() {
+  const w = stage.clientWidth, h = stage.clientHeight;
+  renderer.setSize(w, h, false); camera.aspect = w / Math.max(h, 1); camera.updateProjectionMatrix();
+  drawColorbar(); drawProfile();
+}
+window.addEventListener('resize', resize);
+
+cut = computeCut();
+rebuildDepthLabels();
+setVar('T');
+onViewChange();
+resize();
+cam.r = fitRadius();
+applyCamera();
+loading.style.display = 'none';
+
+let last = performance.now();
+function frame(now) {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  if (particles.visible && !reduceMotion) stepParticles(dt);
+  else if (particles.visible && reduceMotion && !frame.once) { stepParticles(0.001); frame.once = true; }
+  if (hoverPos && pointers.size === 0) hover(hoverPos.x, hoverPos.y);
+  renderer.render(scene, camera);
+  updateLabels(stage.clientWidth, stage.clientHeight);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+setTimeout(() => animateKnife(PRESETS.corner, 1600), 250);
+}
+})();
+</script>
+</body>
+</html>

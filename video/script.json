@@ -1,0 +1,79 @@
+{
+  "lines": [
+    {
+      "id": "v0",
+      "text": "This is OceanScope. The North Indian Ocean, rebuilt in three dimensions, from the waves at the surface to four thousand metres below."
+    },
+    {
+      "id": "v1",
+      "text": "In July, the southwest monsoon drives a heavy swell across the Arabian Sea."
+    },
+    {
+      "id": "v2",
+      "text": "Off Somalia, the Great Whirl spins up: an eddy five hundred kilometres wide."
+    },
+    {
+      "id": "v3",
+      "text": "Along the Lakshadweep and Maldives ridge, coral shoals glow in shallow water.",
+      "say": "Along the Luck-shud-weep and Maldives ridge, coral shoals glow in shallow water."
+    },
+    {
+      "id": "v4",
+      "text": "In the Bay of Bengal, river water floats on top as a warm, fresh lid."
+    },
+    {
+      "id": "v5",
+      "text": "And in May 2020, that warm water fed Cyclone Amphan, one of the strongest storms the Bay has ever seen.",
+      "say": "And in May twenty twenty, that warm water fed Cyclone Um-pun, one of the strongest storms the Bay has ever seen."
+    },
+    {
+      "id": "v6",
+      "text": "OceanScope lets you cut the ocean open like a cake. Slice along any line, switch between temperature, salinity and currents, and peel back the layers."
+    },
+    {
+      "id": "v6b",
+      "text": "Every wave is live. Push the sea state to a storm, or paint the surface with real data."
+    },
+    {
+      "id": "v7",
+      "text": "Click anywhere on the water to dive in. You get the whole water column: temperature, salt, sound speed, cyclone fuel, model error, and who lives at every depth."
+    },
+    {
+      "id": "v8",
+      "text": "The Truth Meter shows where the ocean model disagrees with real Argo floats, and ranks the places that most need a new float."
+    },
+    {
+      "id": "v9",
+      "text": "Cyclone Lab replays Amphan day by day. The fuel gauge rises, the storm intensifies, and a cold wake spreads behind it.",
+      "say": "Cyclone Lab replays Um-pun day by day. The fuel gauge rises, the storm intensifies, and a cold wake spreads behind it."
+    },
+    {
+      "id": "v10",
+      "text": "For search and rescue, drop the last known position. Seven hundred virtual drifters ride the currents and rank where to search first."
+    },
+    {
+      "id": "v11",
+      "text": "Sonar traces sound through the water and finds the quiet zones where a submarine can hide."
+    },
+    {
+      "id": "v12",
+      "text": "Learn mode turns it all into a story, with marine life at every depth, quizzes, and the Arabian Sea's low oxygen zone."
+    },
+    {
+      "id": "v13",
+      "text": "And a built-in copilot drives everything in plain English."
+    },
+    {
+      "id": "v13b",
+      "text": "Ask where to deploy the next float, and it answers from the model's own blind spots."
+    },
+    {
+      "id": "v15",
+      "text": "From the sunlit surface to the midnight zone, every layer tells a story."
+    },
+    {
+      "id": "v14",
+      "text": "OceanScope. See the ocean the way scientists do."
+    }
+  ]
+}

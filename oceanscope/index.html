@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OceanScope</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css?v=cine7">
+<link rel="stylesheet" href="css/cine.css?v=cine7">
+</head>
+<body>
+<div id="app">
+  <header id="top">
+    <div class="brand">
+      <span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <b>OceanScope</b>
+      <span class="tag">North Indian Ocean · July stand-in</span>
+    </div>
+    <div class="top-right">
+      <div id="ctx-stat" class="ctx-stat" hidden></div>
+      <button type="button" id="film-btn" class="film-btn" title="Hands-free cinematic tour for recording"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><span>Film mode</span></button>
+      <label class="switch" title="Cinematic ocean: waves, light and weather">
+        <input type="checkbox" id="cine" checked>
+        <span class="sw"></span><span class="sw-label">Cinema</span>
+      </label>
+      <label class="switch" title="Simpler words and fewer controls">
+        <input type="checkbox" id="explore">
+        <span class="sw"></span><span class="sw-label">Explore mode</span>
+      </label>
+    </div>
+  </header>
+
+  <nav id="nav" aria-label="Views"></nav>
+
+  <aside id="panel" aria-label="Controls">
+    <div id="panel-inner"></div>
+  </aside>
+
+  <main id="stage">
+    <canvas id="c" role="img" aria-label="3D block of the North Indian Ocean that can be cut open"></canvas>
+    <div id="labels"></div>
+    <div id="hud"></div>
+    <div id="tip"></div>
+    <section id="profile" hidden aria-live="polite">
+      <div class="p-head">
+        <div><h3 id="p-title"></h3><p id="p-sub"></p></div>
+        <button type="button" id="p-close" class="x" aria-label="Close float panel">×</button>
+      </div>
+      <canvas id="p-chart"></canvas>
+      <div class="p-legend"><span><i class="dot"></i>What the float measured</span><span><i class="ln"></i>What the model predicted</span></div>
+      <p id="p-stat"></p>
+      <div class="p-actions"><button type="button" class="chip" id="p-sonar">Place sonar here</button></div>
+    </section>
+    <div id="overlay"></div>
+    <div id="caption" hidden></div>
+    <div id="hint">Drag to turn · scroll to zoom · click the water to dive in · click a float to compare</div>
+    <div id="loading"><div class="loader"><span></span><span></span><span></span></div><p>Building the ocean</p></div>
+  </main>
+
+  <div id="copilot">
+    <button type="button" id="cp-pill" aria-expanded="false" aria-controls="cp-panel">
+      <span class="cp-dot"></span><span>Ask OceanScope</span>
+    </button>
+    <section id="cp-panel" hidden>
+      <div class="cp-head"><b>Copilot</b><span class="cp-sub">Type what you want to see</span><button type="button" class="x" id="cp-close" aria-label="Close copilot">×</button></div>
+      <div id="cp-log"></div>
+      <div class="cp-sugg" id="cp-sugg"></div>
+      <form id="cp-form" autocomplete="off">
+        <input id="cp-in" type="text" placeholder="Show salinity at 300 m…" aria-label="Ask the copilot">
+        <button type="submit" aria-label="Send">→</button>
+      </form>
+    </section>
+  </div>
+  <div id="toast" role="status" aria-live="polite"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script src="js/core/util.js?v=cine7"></script>
+<script src="js/core/store.js?v=cine7"></script>
+<script src="js/core/ocean.js?v=cine7"></script>
+<script src="js/core/ui.js?v=cine7"></script>
+<script src="js/core/waves.js?v=cine7"></script>
+<script src="js/core/scene.js?v=cine7"></script>
+<script src="js/core/fx.js?v=cine7"></script>
+<script src="js/views/slicer.js?v=cine7"></script>
+<script src="js/views/truth.js?v=cine7"></script>
+<script src="js/views/cyclone.js?v=cine7"></script>
+<script src="js/views/sar.js?v=cine7"></script>
+<script src="js/views/sonar.js?v=cine7"></script>
+<script src="js/views/learn.js?v=cine7"></script>
+<script src="js/dossier.js?v=cine7"></script>
+<script src="js/copilot.js?v=cine7"></script>
+<script src="js/film.js?v=cine7"></script>
+<script src="js/app.js?v=cine7"></script>
+</body>
+</html>
